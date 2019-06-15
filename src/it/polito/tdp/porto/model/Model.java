@@ -1,5 +1,6 @@
 package it.polito.tdp.porto.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +68,21 @@ public class Model {
 	
 	public Graph<Author, DefaultEdge> getGrafo(){
 		return this.grafo;
+	}
+	
+	public List<Author> getCoAuthor(Author author){
+		return Graphs.neighborListOf(this.grafo, author);
+	}
+	
+	public List<Author> nonCoAuthor(Author author){
+		List<Author> coAuthor = Graphs.neighborListOf(this.grafo, author);
+		List<Author> nonCoAuthor = new ArrayList<Author>();
+		for(Author a : grafo.vertexSet()) {
+			if(!coAuthor.contains(a)){
+				nonCoAuthor.add(a);
+			}
+		}
+		return nonCoAuthor;
 	}
 
 }

@@ -6,6 +6,8 @@ public class TestModel {
 		
 		Model model = new Model();
 		model.creaGrafo();
+		
+		System.out.println("Grafo creato. Vertici: " + model.getGrafo().vertexSet().size() + " archi: " + model.getGrafo().edgeSet().size());
 	}
 
 }
