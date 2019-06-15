@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import it.polito.tdp.porto.model.Author;
 import it.polito.tdp.porto.model.CoAuthor;
@@ -69,12 +71,12 @@ public class PortoDAO {
 		}
 	}
 	
-	public List<CoAuthor> getCoAuthor(){
+	public Set<CoAuthor> getCoAuthor(){
 		String sql = "SELECT c1.authorid id1, c2.authorid id2, c1.eprintid articolo "+
 					"FROM creator c1, creator c2 " + 
 				"WHERE c1.eprintid=c2.eprintid AND c1.authorid>c2.authorid";
 		
-		List<CoAuthor> result = new ArrayList<CoAuthor>();
+		Set<CoAuthor> result = new HashSet<CoAuthor>();
 		
 		try {
 			Connection conn = DBConnect.getConnection();
@@ -135,6 +137,34 @@ public class PortoDAO {
 			while (rs.next()) {
 				//Author a = new Author(rs.getInt("id"), rs.getString("lastname"), rs.getString("firstname"));
 				result.add(new Author(rs.getInt("id"), rs.getString("lastname"), rs.getString("firstname")));
+			}
+
+			return result;
+
+		} catch (SQLException e) {
+			 e.printStackTrace();
+			throw new RuntimeException("Errore Db");
+		}
+	}
+
+	public List<Paper> getPaperByAuthors(Author a1, Author a2) {
+		String sql = "SELECT c1.eprintid as id, paper.title, paper.issn, paper.publication, paper.`type`, paper.types " + 
+				"FROM creator c1, creator c2, paper " + 
+				"WHERE c1.eprintid=c2.eprintid AND c1.authorid = ? AND c2.authorid = ?  " + 
+				"AND paper.eprintid=c1.eprintid ";
+		
+		List<Paper> result = new ArrayList<Paper>();
+		
+		try {
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, a1.getId());
+			st.setInt(2, a2.getId());
+
+			ResultSet rs = st.executeQuery();
+
+			while (rs.next()) {
+				result.add(new Paper(rs.getInt("id"), rs.getString("title"), rs.getString("issn"), rs.getString("publication"), rs.getString("type"), rs.getString("types")));
 			}
 
 			return result;
