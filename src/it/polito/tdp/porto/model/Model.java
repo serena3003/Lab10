@@ -96,6 +96,19 @@ public class Model {
 			Author a2 = grafo.getEdgeTarget(e);
 			sequenzaPaper.addAll(dao.getPaperByAuthors(a1, a2));
 		}
+		
+		/*GraphIterator<Author, DefaultEdge> it = new BreadthFirstIterator<>(this.grafo, author1);
+		while(it.hasNext() && !it.next().equals(author2)) {
+			resultBF.add(it.next());
+		}
+		
+		for(Author a1 : resultBF) {
+			for(Author a2 : resultBF) {
+				if(this.grafo.containsEdge(a1, a2)) {
+					sequenzaPaper.addAll(dao.getPaperByAuthors(a1, a2));
+				}
+			}
+		}*/
 
 		return sequenzaPaper;
 	}
